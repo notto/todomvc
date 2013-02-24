@@ -22,7 +22,9 @@ $(function () {
 			'dblclick label':	'edit',
 			'click .destroy':	'clear',
 			'keypress .edit':	'updateOnEnter',
-			'blur .edit':		'close'
+			'blur .edit':		'close',
+			'mouseover label': 'showUser',
+			'mouseleave label': 'hideUser'
 		},
 
 		// The TodoView listens for changes to its model, re-rendering. Since there's
@@ -90,6 +92,16 @@ $(function () {
 		// Remove the item, destroy the model from *localStorage* and delete its view.
 		clear: function () {
 			this.model.destroy();
+		},
+		
+		showUser: function(){
+			if (this.model.get('user') == "") $('#header').attr('data-user',"Not assigned");
+			else $('#header').attr('data-user',"Assigned to: "+this.model.get('user'));
+		},
+		
+		hideUser: function(){
+			$('#header').attr("data-user", "");
 		}
+		
 	});
 });

@@ -11,10 +11,11 @@ var app = app || {};
 	app.Todo = Backbone.Model.extend({
 
 		// Default attributes for the todo
-		// and ensure that each todo created has `title` and `completed` keys.
+		// and ensure that each todo created has `title`, `completed`, and 'user' keys.
 		defaults: {
 			title: '',
-			completed: false
+			completed: false,
+			user: ''
 		},
 
 		// Toggle the `completed` state of this todo item.

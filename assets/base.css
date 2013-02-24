@@ -84,17 +84,22 @@ body {
 }
 
 #header {
-	padding-top: 15px;
+	padding-top: 30px;
 	border-radius: inherit;
 }
 
 #header:before {
-	content: '';
+	color: #ffffff;
+	top: 50%;
+	vertical-align: center;
+	line-height: 30px;
+	text-align: center;
+	content: attr(data-user);
 	position: absolute;
 	top: 0;
 	right: 0;
 	left: 0;
-	height: 15px;
+	height: 30px;
 	z-index: 2;
 	border-bottom: 1px solid #6c615c;
 	background: #8d7d77;
@@ -107,6 +112,10 @@ body {
 	filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#9d8b83', EndColorStr='#847670');
 	border-top-left-radius: 1px;
 	border-top-right-radius: 1px;
+}
+
+#header:before ul{
+    list-style-type: none;
 }
 
 #new-todo,
@@ -273,7 +282,8 @@ label[for='toggle-all'] {
 	transition: all 0.2s;
 }
 
-#todo-list li .destroy:hover {
+#todo-list li .destroy:hover,
+#todo-list li .addUser:hover {
 	text-shadow: 0 0 1px #000,
 				 0 0 10px rgba(199, 107, 107, 0.8);
 	-webkit-transform: scale(1.3);
