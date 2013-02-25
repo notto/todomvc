@@ -1,15 +1,13 @@
 /*global Backbone _ $ ENTER_KEY*/
 var app = app || {};
 
-var userSelect = false;
-var activeItem;
-
 $(function () {
 	'use strict';
 
 	// Todo Item View
 	// --------------
-
+	var userSelect = false;
+	var activeItem;
 	// The DOM element for a todo item...
 	app.TodoView = Backbone.View.extend({
 
@@ -68,25 +66,36 @@ $(function () {
 			this.model.toggle();
 		},
 
+		// Focus on the 'select' tag
+		setSelect: function(){
+			userSelect = true;
+		},
+		
+		// Remove focus from the 'select' tag
+		removeSelect: function(){
+			this.$el.removeClass('editing');
+			userSelect = false;
+		},
+
 		// Switch this view into `"editing"` mode, displaying the input field.
 		edit: function () {
 			var select = this.$el.find('select');
 			select.html('');
-			select.html('<option val = "Not assigned">Not assigned</option>');
+			select.html('<option val = "Unassigned">Unassigned</option>');
 			var username = this.model.get('user');
-			if (username != "Not assigned" && username != "")
+			if (username != "Unassigned" && username != "")
 				select.append('<option val = '+username+'>'+username+'</option>');
 			select.val(username);
 			var seen = {};
 			app.Todos.each(function(todo){
 				var name = todo.attributes.user;
-				if (username != name && seen[name]!=true && name != "Not assigned" && name != "" && app.Users.where({name:name})==0){
+				if (username != name && seen[name]!=true && name != "Unassigned" && name != "" && app.Users.where({name:name})==0){
 					app.Users.create({name:name});
 				}
 			});
 			app.Users.each(function(user){
 				var name = user.attributes.name;
-				if (username != name && name != "Not assigned" && seen[name]!=true){
+				if (username != name && name != "Unassigned" && seen[name]!=true){
 					select.append('<option val = '+name+'>'+name+'</option>');
 					seen[name]=true;
 				}
@@ -117,17 +126,6 @@ $(function () {
 			}, 150);
 		},
 		
-		// Focus on the 'select' tag
-		setSelect: function(){
-			userSelect = true;
-		},
-		
-		// Remove focus from the 'select' tag
-		removeSelect: function(){
-			this.$el.removeClass('editing');
-			userSelect = false;
-		},
-		
 		// If you hit `enter`, we're through editing the item.
 		updateOnEnter: function (e) {
 			if (e.which === ENTER_KEY) {
@@ -141,7 +139,7 @@ $(function () {
 		},
 		
 		showUser: function(){
-			if (this.model.get('user') == "" || this.model.get('user') == "Not assigned") $('#header').attr('data-user',"Not assigned");
+			if (this.model.get('user') == "" || this.model.get('user') == "Unassigned") $('#header').attr('data-user',"Unassigned");
 			else $('#header').attr('data-user',"Assigned to: "+this.model.get('user'));
 		},
 		
