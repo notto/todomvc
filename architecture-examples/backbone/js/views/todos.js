@@ -1,6 +1,9 @@
 /*global Backbone _ $ ENTER_KEY*/
 var app = app || {};
 
+var userSelect = false;
+var activeItem;
+
 $(function () {
 	'use strict';
 
@@ -22,7 +25,9 @@ $(function () {
 			'dblclick label':	'edit',
 			'click .destroy':	'clear',
 			'keypress .edit':	'updateOnEnter',
-			'blur .edit':		'close',
+			'blur .update':		'close',
+			'focus select':		'setSelect',
+			'blur select':		'removeSelect',
 			'mouseover label': 'showUser',
 			'mouseleave label': 'hideUser'
 		},
@@ -65,6 +70,7 @@ $(function () {
 
 		// Switch this view into `"editing"` mode, displaying the input field.
 		edit: function () {
+			this.$el.find('select').val(this.model.get('user'));
 			this.$el.addClass('editing');
 			this.$input.focus();
 		},
@@ -78,10 +84,33 @@ $(function () {
 			} else {
 				this.clear();
 			}
-
-			this.$el.removeClass('editing');
+			
+			value = this.$el.find('select').val();
+			this.model.save({user : value});
+			
+			activeItem = this;
+			
+			console.log(userSelect);
+			setTimeout(function(){
+				if (!userSelect){
+					activeItem.$el.removeClass('editing');
+					userSelect = false;
+				}
+			}, 150);
 		},
-
+		
+		// Focus on the 'select' tag
+		setSelect: function(){
+			console.log("Yo");
+			userSelect = true;
+		},
+		
+		// Remove focus from the 'select' tag
+		removeSelect: function(){
+			this.$el.removeClass('editing');
+			userSelect = false;
+		},
+		
 		// If you hit `enter`, we're through editing the item.
 		updateOnEnter: function (e) {
 			if (e.which === ENTER_KEY) {

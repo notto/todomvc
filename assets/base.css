@@ -152,6 +152,14 @@ body {
 	box-shadow: none;
 }
 
+#addUser {
+	position:absolute;
+	right:3px;
+	top:4px;
+	width 88px;
+	z-index: 5;
+}
+
 #main {
 	position: relative;
 	z-index: 2;
@@ -205,13 +213,26 @@ label[for='toggle-all'] {
 
 #todo-list li.editing .edit {
 	display: block;
-	width: 506px;
+	width: 400px;
 	padding: 13px 17px 12px 17px;
 	margin: 0 0 0 43px;
 }
 
+.userSelect{
+	width:80px;
+	top:20px;
+	left: 450px;
+	position: absolute;
+	border-radius:0px;
+	display:none;
+}
+
 #todo-list li.editing .view {
-	display: none;
+	display:none;
+}
+
+#todo-list li.editing .userSelect{
+	display:block;
 }
 
 #todo-list li .toggle {
@@ -282,8 +303,7 @@ label[for='toggle-all'] {
 	transition: all 0.2s;
 }
 
-#todo-list li .destroy:hover,
-#todo-list li .addUser:hover {
+#todo-list li .destroy:hover{
 	text-shadow: 0 0 1px #000,
 				 0 0 10px rgba(199, 107, 107, 0.8);
 	-webkit-transform: scale(1.3);
