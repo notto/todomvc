@@ -20,6 +20,7 @@ $(function ($) {
 		// Delegated events for creating new items, and clearing completed ones.
 		events: {
 			'keypress #new-todo': 'createOnEnter',
+			'keypress #addUser': 'addOneUser',
 			'click #clear-completed': 'clearCompleted',
 			'click #toggle-all': 'toggleAllComplete'
 		},
@@ -32,6 +33,7 @@ $(function ($) {
 			this.$input = this.$('#new-todo');
 			this.$footer = this.$('#footer');
 			this.$main = this.$('#main');
+			this.$userAdd = this.$('#addUser');
 
 			this.listenTo(app.Todos, 'add', this.addOne);
 			this.listenTo(app.Todos, 'reset', this.addAll);
@@ -102,12 +104,25 @@ $(function ($) {
 		// If you hit return in the main input field, create new **Todo** model,
 		// persisting it to *localStorage*.
 		createOnEnter: function (e) {
+			console.log(e);
 			if (e.which !== ENTER_KEY || !this.$input.val().trim()) {
 				return;
 			}
 
 			app.Todos.create(this.newAttributes());
 			this.$input.val('');
+		},
+		
+		addOneUser: function(e){
+			console.log(e);
+			if (e.which !== ENTER_KEY || !this.$userAdd.val().trim()) {
+				return;
+			}
+			console.log(this.$userAdd.val());
+			if (app.Users.where({name: this.$userAdd.val()}).length == 0){
+				app.Users.create({name:this.$userAdd.val()});
+			}
+			this.$userAdd.val('');
 		},
 
 		// Clear all completed todo items, destroying their models.

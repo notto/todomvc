@@ -28,7 +28,7 @@ $(function () {
 			'blur .update':		'close',
 			'focus select':		'setSelect',
 			'blur select':		'removeSelect',
-			'mouseover label': 'showUser',
+			'mouseover label':  'showUser',
 			'mouseleave label': 'hideUser'
 		},
 
@@ -70,7 +70,27 @@ $(function () {
 
 		// Switch this view into `"editing"` mode, displaying the input field.
 		edit: function () {
-			this.$el.find('select').val(this.model.get('user'));
+			var select = this.$el.find('select');
+			select.html('');
+			select.html('<option val = "Not assigned">Not assigned</option>');
+			var username = this.model.get('user');
+			if (username != "Not assigned" && username != "")
+				select.append('<option val = '+username+'>'+username+'</option>');
+			select.val(username);
+			var seen = {};
+			app.Todos.each(function(todo){
+				var name = todo.attributes.user;
+				if (username != name && seen[name]!=true && name != "Not assigned" && name != "" && app.Users.where({name:name})==0){
+					app.Users.create({name:name});
+				}
+			});
+			app.Users.each(function(user){
+				var name = user.attributes.name;
+				if (username != name && name != "Not assigned" && seen[name]!=true){
+					select.append('<option val = '+name+'>'+name+'</option>');
+					seen[name]=true;
+				}
+			});
 			this.$el.addClass('editing');
 			this.$input.focus();
 		},
@@ -89,19 +109,16 @@ $(function () {
 			this.model.save({user : value});
 			
 			activeItem = this;
-			
-			console.log(userSelect);
+
 			setTimeout(function(){
 				if (!userSelect){
 					activeItem.$el.removeClass('editing');
-					userSelect = false;
 				}
 			}, 150);
 		},
 		
 		// Focus on the 'select' tag
 		setSelect: function(){
-			console.log("Yo");
 			userSelect = true;
 		},
 		
@@ -124,7 +141,7 @@ $(function () {
 		},
 		
 		showUser: function(){
-			if (this.model.get('user') == "") $('#header').attr('data-user',"Not assigned");
+			if (this.model.get('user') == "" || this.model.get('user') == "Not assigned") $('#header').attr('data-user',"Not assigned");
 			else $('#header').attr('data-user',"Assigned to: "+this.model.get('user'));
 		},
 		
